@@ -78,9 +78,9 @@ func gaussSkipCount(A [][]int, B [][]int) [][]int {
 }
 
 func generateRandomMatrix(n int) [][]int {
-	A := make([][]int, n)
+	A := make([][]int, n, n)
 	for i := range A {
-		A[i] = make([]int, n)
+		A[i] = make([]int, n, n)
 	}
 
 	for i := 0; i < n; i++ {
@@ -105,9 +105,12 @@ func assertMatrixMultiplicationIsCorrect(expected, actual [][]int) {
 	fmt.Println("Matrix multiplication was successful!")
 }
 
-func printMatrix(A [][]int) {
-	for _, row := range A {
-		fmt.Println(row)
+func printMatrix(A [][]int, x1, x2, y1, y2 int) {
+	for i := x1; i <= x2; i++ {
+		for j := y1; j <= y2; j++ {
+			fmt.Printf("%v ", A[i][j])
+		}
+		fmt.Println()
 	}
 	fmt.Println()
 }
