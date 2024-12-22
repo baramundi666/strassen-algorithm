@@ -65,14 +65,14 @@ func gauss(A, B, C [][]int, xA1, xA2, yA1, yA2, xB1, xB2, yB1, yB2, xC1, xC2, yC
 }
 
 func strassen(A, B, C [][]int, x1, x2, y1, y2, size, depth int) {
-	// if size <= 3 {
-	// 	gauss(A, B, C, x1, x2, y1, y2, x1, x2, y1, y2, x1, x2, y1, y2)
-	// 	return
-	// }
-	if size == 1 {
-		C[x1][y1] = A[x1][y1] * B[x1][y1]
+	if size <= 5 {
+		gauss(A, B, C, x1, x2, y1, y2, x1, x2, y1, y2, x1, x2, y1, y2)
 		return
 	}
+	// if size == 1 {
+	// 	C[x1][y1] = A[x1][y1] * B[x1][y1]
+	// 	return
+	// }
 
 	if size%2 == 1 {
 		// Dynamic peeling split into block matrices
@@ -268,7 +268,7 @@ func runAlgorithmTest(n int) {
 }
 
 func main() {
-	// runAlgorithmTest(1001)
-	data := runTimeTest(700)
+	// runAlgorithmTest(1500)
+	data := runTimeTest(1501)
 	writeDataToFile(data)
 }
