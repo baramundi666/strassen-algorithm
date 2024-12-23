@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"math/rand"
 	"os"
 	"strconv"
 	"time"
 )
+
+var eps float64 = 1e-7
 
 func splitIntoBlockMatrices(A [][]int) ([][]int, [][]int, [][]int, [][]int) {
 	n_half := len(A) / 2
@@ -56,13 +59,13 @@ func concatenateMatrices(A, B, C, D [][]int) [][]int {
 	return result
 }
 
-func gaussSkipCount(A [][]int, B [][]int) [][]int {
+func gaussSkipCount[T int | float64](A, B [][]T) [][]T {
 	n := len(A)
 	m := len(B[0])
 
-	C := make([][]int, n)
+	C := make([][]T, n)
 	for i := range C {
-		C[i] = make([]int, m)
+		C[i] = make([]T, m)
 	}
 
 	for i := 0; i < n; i++ {
@@ -77,10 +80,10 @@ func gaussSkipCount(A [][]int, B [][]int) [][]int {
 	return C
 }
 
-func generateRandomMatrix(n int) [][]int {
-	A := make([][]int, n, n)
+func generateRandomMatrixInt(n int) [][]int {
+	A := make([][]int, n)
 	for i := range A {
-		A[i] = make([]int, n, n)
+		A[i] = make([]int, n)
 	}
 
 	for i := 0; i < n; i++ {
@@ -92,12 +95,29 @@ func generateRandomMatrix(n int) [][]int {
 	return A
 }
 
-func assertMatrixMultiplicationIsCorrect(expected, actual [][]int) {
+func generateRandomMatrixFloat64(n int) [][]float64 {
+	A := make([][]float64, n)
+	for i := range A {
+		A[i] = make([]float64, n)
+	}
+
+	var a, b float64 = 0.00000001, 1.0
+
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			A[i][j] = a + (b-a)*rand.Float64()
+		}
+	}
+
+	return A
+}
+
+func assertMatrixMultiplicationIsCorrect(expected, actual [][]float64) {
 	n := len(expected)
 
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
-			if expected[i][j] != actual[i][j] {
+			if math.Abs(expected[i][j]-actual[i][j]) >= eps {
 				log.Fatalf("Matrix multiplication error!\nexpected=%v\nactual=%v\n", expected[i][j], actual[i][j])
 			}
 		}
@@ -105,7 +125,7 @@ func assertMatrixMultiplicationIsCorrect(expected, actual [][]int) {
 	fmt.Println("Matrix multiplication was successful!")
 }
 
-func printMatrix(A [][]int, x1, x2, y1, y2 int) {
+func printMatrix[T int | float64](A [][]T, x1, x2, y1, y2 int) {
 	for i := x1; i <= x2; i++ {
 		for j := y1; j <= y2; j++ {
 			fmt.Printf("%v ", A[i][j])
